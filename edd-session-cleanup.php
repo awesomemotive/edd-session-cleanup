@@ -83,24 +83,43 @@ class EDD_Session_Cleanup {
 			}
 		}
 
+		$this->cleanup_count = 0;
+
 		// Delete all expired sessions in a single query
 		if ( ! empty( $expired_sessions ) ) {
 			$expired_names = implode( "','", $expired_sessions );
 			$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name IN ('$expired_names')" );
+
+			$this->cleanup_count += count( $expired_names );
 		}
 
 		// Delete all invalid sessions in a single query
 		if ( ! empty( $invalid_sessions ) ) {
 			$invalid_names = implode( "','", $invalid_sessions );
 			$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name IN ('$invalid_names')" );
+
+			$this->cleanup_count += count( $invalid_names );
 		}
 
 		// Delete all sessions without an expiration entry
 		if ( ! empty( $sessions_without_expirations ) ) {
 			$missing_names = implode( "','", $sessions_without_expirations );
 			$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name IN ('$missing_names')" );
+
+			$this->cleanup_count += count( $missing_names );
 		}
+		add_action( 'admin_notices', array( $this, 'display_notice' ) );
 	}
+
+	public function display_notice() {
+		?>
+		<div class="updated">
+			<p><?php _e( 'Session Cleanup Complete.', 'edd' ); ?></p>
+			<p><?php printf( _n( '%d session removed.', '%d sessions removed.', $this->cleanup_count, 'edd' ), $this->cleanup_count ); ?></p>
+		</div>
+		<?php
+	}
+
 }
 
 new EDD_Session_Cleanup;

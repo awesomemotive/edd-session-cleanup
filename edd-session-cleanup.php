@@ -40,6 +40,10 @@ class EDD_Session_Cleanup {
 	public function cleanup_the_sessions() {
 		global $wpdb;
 
+		if( ! current_user_can( 'manage_shop_settings' ) ) {
+			return;
+		}
+
 		// Clean up expired sessions
 		$expiration_keys = $wpdb->get_results( "SELECT option_name, option_value FROM $wpdb->options WHERE option_name LIKE '_wp_session_expires_%'" );
 		$session_keys = $wpdb->get_results( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_wp_session_%' AND option_name NOT LIKE '_wp_session_expires_%'" );

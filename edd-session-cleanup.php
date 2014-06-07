@@ -9,12 +9,12 @@
 class EDD_Session_Cleanup {
 
 	public function __construct() {
-		add_filter( 'edd_tools_tabs', array( $this, 'remove_sessions_tab' ), 10, 1 );
+		add_filter( 'edd_tools_tabs', array( $this, 'add_sessions_tab' ), 10, 1 );
 		add_action( 'edd_tools_tab_cleanup_sessions', array( $this, 'clean_sessions_area' ) );
 		add_action( 'edd_cleanup_sessions', array( $this, 'cleanup_the_sessions' ) );
 	}
 
-	public function remove_sessions_tab( $tabs ) {
+	public function add_sessions_tab( $tabs ) {
 		$tabs['cleanup_sessions'] = __( 'Cleanup Sessions', 'edd' );
 
 		return $tabs;

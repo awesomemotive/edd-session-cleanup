@@ -47,7 +47,7 @@ class EDD_Session_Cleanup {
 			$session_ids[] = substr( $session->option_name, 20 );
 		}
 
-		$now = current_time( 'timestamp' );
+		$now = time();
 		$twentyfifty = 2524608000;
 
 		$expired_sessions   = array();
